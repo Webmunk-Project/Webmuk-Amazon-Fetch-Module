@@ -10,9 +10,6 @@
 
     for (const pattern of patterns) {
       if (details.url.includes(pattern)) {
-        console.log('chrome.webRequest.onCompleted: ' + details.initiator)
-        console.log(details)
-
         chrome.scripting.executeScript({
           target: {
             tabId: details.tabId, // eslint-disable-line object-shorthand

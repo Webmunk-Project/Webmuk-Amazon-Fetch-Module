@@ -135,6 +135,18 @@
         const grandTotal = orderSummary.find('.a-row:has(:contains("Grand Total"))')
         orderDetails['order-total'] = grandTotal.find('.a-span-last .a-color-base').text().trim()
 
+        const orderDestination = $('.displayAddressCityStateOrRegionPostalCode')
+
+        if (orderDestination.length > 0) {
+          orderDetails['order-destination'] = orderDestination.text().trim()
+        }
+
+        const orderDelivered = $('.a-row span.a-text-bold:contains("Delivered ")')
+
+        if (orderDelivered.length > 0) {
+          orderDetails['order-delivered'] = moment(orderDelivered.text().replaceAll('Delivered ', '').trim(), 'MMM DD, YYYY').toISOString()
+        }
+
         chrome.runtime.sendMessage({
           content: 'record_data_point',
           generator: 'webmunk-amazon-order',
