@@ -14,6 +14,18 @@
   const queuedOrderUrls = []
   let queueSize = 0
 
+  const clearOrderQueue = function (request, sender, sendResponse) {
+    while (queuedOrderUrls.length > 0) {
+      queuedOrderUrls.pop()
+    }
+
+    queueSize = 0
+
+    console.log('[Amazon Fetch] Cleared order queue due to network issue.')
+
+    sendResponse('cleared')
+  }
+
   const queueOrderLookup = function (request, sender, sendResponse) {
     console.log('[Amazon Fetch] Queuing ' + request.url + '...')
 
@@ -107,6 +119,7 @@
       console.log('[Amazon Fetch] Added URL filter: ' + urlFilter)
     }
 
+    registerMessageHandler('amazon_clear_queue', clearOrderQueue)
     registerMessageHandler('amazon_fetch_queue_order_lookup', queueOrderLookup)
     registerMessageHandler('amazon_fetch_retrieve_order_details', fetchOrderDetails)
     registerMessageHandler('amazon_sign_in_required', amazonSignInRequired)

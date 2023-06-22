@@ -25,4 +25,24 @@
   }, {
     urls: ['<all_urls>']
   }, ['responseHeaders', 'extraHeaders'])
+
+  chrome.webRequest.onErrorOccurred.addListener(async function (details) {
+    const skip = ['net::ERR_ABORTED', 'net::ERR_CACHE_MISS']
+
+    if (skip.includes(details.error)) {
+      // Skip
+    } else {
+      chrome.runtime.sendMessage({
+        content: 'amazon_clear_queue'
+      }, function (message) {
+        chrome.runtime.sendMessage({
+          content: 'amazon_fetch_error',
+          error: details.error
+        }, function (message) {
+        })
+      })
+    }
+  }, {
+    urls: ['<all_urls>']
+  }, ['extraHeaders'])
 })(); // eslint-disable-line semi, no-trailing-spaces

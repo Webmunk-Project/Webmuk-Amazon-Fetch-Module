@@ -48,7 +48,7 @@
         const locationUrl = new URL(window.location.href)
 
         if (locationUrl.searchParams.has('startIndex') === false) {
-          const orderCount = $('span.num-orders').text().replace(/\D/g, '')
+          const orderCount = parseInt($('span.num-orders').text().replace(/\D/g, ''))
 
           let orderOffset = 10
 
@@ -68,6 +68,19 @@
 
             orderOffset += 10
           }
+
+          const params = new URLSearchParams(window.location.search)
+
+          chrome.runtime.sendMessage({
+            content: 'record_data_point',
+            generator: 'webmunk-amazon-order-count',
+            payload: {
+              count: orderCount,
+              period: params.get('orderFilter')
+            }
+          }, function (message) {
+
+          })
         }
 
         const orderLinks = document.querySelectorAll('.yohtmlc-order-details-link')
