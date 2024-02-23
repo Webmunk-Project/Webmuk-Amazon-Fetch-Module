@@ -75,6 +75,7 @@
             content: 'record_data_point',
             generator: 'webmunk-amazon-order-count',
             payload: {
+              url: window.location.href,
               count: orderCount,
               period: params.get('orderFilter')
             }
@@ -100,6 +101,7 @@
         fetchOrders()
       } else if (window.location.href.includes('/gp/your-account/order-details')) {
         const orderDetails = {
+          url: window.location.href,
           items: []
         }
 

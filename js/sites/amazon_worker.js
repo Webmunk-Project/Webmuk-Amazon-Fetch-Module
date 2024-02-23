@@ -32,15 +32,27 @@
     if (skip.includes(details.error)) {
       // Skip
     } else {
-      chrome.runtime.sendMessage({
-        content: 'amazon_clear_queue'
-      }, function (message) {
+      let report = true
+
+      if (details.error === 'net::ERR_NAME_NOT_RESOLVED') {
+        const errorUrl = new URL(details.url)
+
+        if (['amazon.com', 'www.amazon.com'].includes(errorUrl.host) === false) {
+          report = false
+        }
+      }
+
+      if (report) {
         chrome.runtime.sendMessage({
-          content: 'amazon_fetch_error',
-          error: details.error
+          content: 'amazon_clear_queue'
         }, function (message) {
+          chrome.runtime.sendMessage({
+            content: 'amazon_fetch_error',
+            error: details.error
+          }, function (message) {
+          })
         })
-      })
+      }
     }
   }, {
     urls: ['<all_urls>']
